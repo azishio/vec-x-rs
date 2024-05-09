@@ -1,6 +1,6 @@
 [package]
 name = "vec-x"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["azishio"]
 edition = "2021"
 description = "Provide an implementation of fixed-length arrays with basic traits implemented and a method of managing them by index."
