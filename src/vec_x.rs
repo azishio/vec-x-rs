@@ -2,12 +2,98 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, 
 
 use num::Num;
 
-#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+/// 任意の要素、任意の長さの固定長配列を表す構造体です。
+/// 主に数学的なベクトルや色を表すために作成したため、四則演算をサポートしています。
+///
+/// ```
+/// use vec_x::{VecX};
+///
+/// let vec1 = VecX::new([1, 2, 3]);
+/// let vec2 = VecX::new([4, 5, 6]);
+///
+/// // Add
+/// assert_eq!(vec1 + vec2, VecX::new([5, 7, 9]));
+/// // Sub
+/// assert_eq!(vec1 - vec2, VecX::new([-3, -3, -3]));
+/// // Mul
+/// assert_eq!(vec1 * vec2, VecX::new([4, 10, 18]));
+/// // Div
+/// assert_eq!(vec1 / vec2, VecX::new([0, 0, 0]));
+/// // Rem
+/// assert_eq!(vec1 % vec2, VecX::new([1, 2, 3]));
+///
+/// // AddAssign
+/// let mut vec = VecX::new([1, 2, 3]);
+/// vec += VecX::new([4, 5, 6]);
+/// assert_eq!(vec, VecX::new([5, 7, 9]));
+/// // SubAssign
+/// let mut vec = VecX::new([1, 2, 3]);
+/// vec -= VecX::new([4, 5, 6]);
+/// assert_eq!(vec, VecX::new([-3, -3, -3]));
+/// // MulAssign
+/// let mut vec = VecX::new([1, 2, 3]);
+/// vec *= VecX::new([4, 5, 6]);
+/// assert_eq!(vec, VecX::new([4, 10, 18]));
+/// // DivAssign
+/// let mut vec = VecX::new([1, 2, 3]);
+/// vec /= VecX::new([4, 5, 6]);
+/// assert_eq!(vec, VecX::new([0, 0, 0]));
+/// // RemAssign
+/// let mut vec = VecX::new([1, 2, 3]);
+/// vec %= VecX::new([4, 5, 6]);
+/// assert_eq!(vec, VecX::new([1, 2, 3]));
+/// ```
+///
+/// 数値以外を配列要素にすることもできます。
+///
+/// ```
+/// use vec_x::{VecX};
+///
+/// let vec1 = VecX::new(["a", "b", "c"]);
+/// ```
+///
+/// ```compile_fail
+/// use vec_x::{VecX};
+///
+///
+/// let vec1 = VecX::new(["a", "b", "c"]);
+/// let vec2 = VecX::new(["d", "e", "f"]);
+///
+/// vec1 + vec2; // compile error!
+/// ```
+/// 以下のように型エイリアスを使用することで、コードの可読性が向上します。
+///
+/// ```
+/// use vec_x::{VecX};
+///
+/// type XYZ = VecX<f64, 3>;
+/// type RGBA = VecX<u8, 4>;
+///
+/// struct Point {
+///    position: XYZ,
+///    color: RGBA,
+/// }
+///
+/// let point = Point {
+///    position: XYZ::new([1.0, 2.0, 3.0]),
+///    color: RGBA::new([255, 0, 0, 255]),
+/// };
+/// ```
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct VecX<T, const N: usize> {
     pub data: [T; N],
 }
 
 impl<T, const N: usize> VecX<T, N> {
+    /// 新しい `VecX` を生成する。
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use vec_x::{VecX};
+    ///
+    /// let vec = VecX::new([1, 2, 3]);
+    /// ```
     pub fn new(data: [T; N]) -> Self {
         Self { data }
     }
