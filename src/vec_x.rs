@@ -2,8 +2,13 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, 
 
 use num::Num;
 
+/// A structure representing a fixed-length array of arbitrary elements and arbitrary length.
+/// Since it was created primarily to represent mathematical vectors and colors, it supports four arithmetic operations.
+///
 /// 任意の要素、任意の長さの固定長配列を表す構造体です。
 /// 主に数学的なベクトルや色を表すために作成したため、四則演算をサポートしています。
+///
+///
 ///
 /// ```
 /// use vec_x::{VecX};
@@ -44,6 +49,8 @@ use num::Num;
 /// assert_eq!(vec, VecX::new([1, 2, 3]));
 /// ```
 ///
+/// Non-numeric elements can also be array elements.
+///
 /// 数値以外を配列要素にすることもできます。
 ///
 /// ```
@@ -61,6 +68,9 @@ use num::Num;
 ///
 /// vec1 + vec2; // compile error!
 /// ```
+///
+/// Using type aliases, as shown below, improves code readability.
+///
 /// 以下のように型エイリアスを使用することで、コードの可読性が向上します。
 ///
 /// ```
@@ -85,6 +95,8 @@ pub struct VecX<T, const N: usize> {
 }
 
 impl<T, const N: usize> VecX<T, N> {
+    /// Generate a new `VecX`.
+    ///
     /// 新しい `VecX` を生成する。
     ///
     /// # Examples
