@@ -6,11 +6,9 @@ use indexmap::IndexSet;
 
 use crate::VecX;
 
-/// `VecX`の集合を表す、特定の機能を持たないトレイトです。
-/// トレイト境界として使用することを意図しており、`Vec<VecX<T, N>>`と`IndexedVecXs<T, N>`に実装されています。
-pub trait VecXCollection {}
-
-impl<T, const N: usize> VecXCollection for Vec<VecX<T, N>> {}
+struct VecXList<T, const N: usize> {
+    data: Vec<VecX<T, N>>,
+}
 
 /// インデックスが付けられた`VecX`の集合を表す構造体です。
 /// 一意の`VecX`に対してインデックスを持ち、ユースケースによってはVecXの集合を効率的に扱えます。
@@ -85,8 +83,6 @@ pub struct IndexedVecXs<T: PartialEq + Eq + Hash, const N: usize> {
     pub indices: Vec<usize>,
 }
 
-impl<T: PartialEq + Eq + Hash, const N: usize> VecXCollection for IndexedVecXs<T, N> {}
-
 impl<T: PartialEq + Eq + Hash, const N: usize> IndexedVecXs<T, N> {
     /// これは通常使用されません。`Vec<VecX<T, N>>`から`IndexedVecXs`を生成するためには`from_vec`を使用してください。
     pub fn new(
@@ -107,11 +103,9 @@ impl<T: PartialEq + Eq + Hash, const N: usize> IndexedVecXs<T, N> {
     }
 
     /// イテレーション可能な構造体`IndexedVecXIter`を返します。
-    pub fn iter(&self) -> IndexedVecXIter<T, N> {
-        IndexedVecXIter {
-            collection: self,
-            current_index: 0,
-        }
+    /// 内部的には、イテレータが消費されるたびに`values`から`indices`中のインデックスに対応する`VecX`を検索しています。
+    pub fn iter(&self) -> Vec<&VecX<T, N>> {
+        self.indices.iter().map(|i| self.values.get_index(*i).unwrap()).collect::<Vec<_>>()
     }
 
     /// `Vec<VecX<T, N>>`から`IndexedVecXs`を生成します。
@@ -124,7 +118,20 @@ impl<T: PartialEq + Eq + Hash, const N: usize> IndexedVecXs<T, N> {
             indices,
         }
     }
+
+    /// `IndexedVecXs`からVec<&VecX<T, N>>を生成します。
+    pub fn to_ref_vec(&self) -> Vec<&VecX<T, N>> {
+        self.indices.iter().map(|i| self.values.get_index(*i).unwrap()).collect::<Vec<_>>()
+    }
 }
+
+impl<T: PartialEq + Eq + Hash + Copy, const N: usize> IndexedVecXs<T, N> {
+    /// `IndexedVecXs`を`Vec<VecX<T, N>>`に変換します。
+    pub fn to_vec(self) -> Vec<VecX<T, N>> {
+        self.indices.into_iter().map(|i| *self.values.get_index(i).unwrap()).collect::<Vec<_>>()
+    }
+}
+
 
 impl<T: PartialEq + Eq + Hash, const N: usize> Index<usize> for IndexedVecXs<T, N> {
     type Output = VecX<T, N>;
