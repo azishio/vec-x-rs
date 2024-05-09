@@ -1,7 +1,19 @@
 [package]
 name = "vec-x"
 version = "0.1.0"
+authors = ["azishio"]
 edition = "2021"
+description = "Provide an implementation of fixed-length arrays with basic traits implemented and a method of managing them by index."
+
+documentation = "https://docs.rs/vec-x"
+homepage = "https://crates.io/crates/vec-x"
+repository = "https://github.com/azishio/vec-x-rs"
+
+readme = "README.md"
+
+keywords = ["vec", "array", "index", "fixed-length"]
+categories = ["compression", "data-structures", "mathematics"]
+license = "MIT OR Apache-2.0"
 
 [dependencies]
 fxhash = "0.2.1"
