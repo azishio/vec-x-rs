@@ -6,10 +6,6 @@ use indexmap::IndexSet;
 
 use crate::VecX;
 
-struct VecXList<T, const N: usize> {
-    data: Vec<VecX<T, N>>,
-}
-
 /// A structure representing a set of indexed `VecX`.
 /// It is indexed for unique `VecX` and can efficiently handle sets of VecX in some use cases.
 ///
