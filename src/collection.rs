@@ -148,7 +148,22 @@ impl<T: PartialEq + Eq + Hash, const N: usize> IndexedVecXs<T, N> {
     pub fn to_ref_vec(&self) -> Vec<&VecX<T, N>> {
         self.indices.iter().map(|i| self.values.get_index(*i).unwrap()).collect::<Vec<_>>()
     }
+
+    /// Inserts a new element.
+    /// Internally inserts a new element in `values` and adds its index to `indices`.
+    /// Returns `true` if a new element is inserted into `values`.
+    ///
+    /// 新しい要素を挿入します。
+    /// 内部的には`values`に新しい要素を挿入し、そのインデックスを`indices`に追加します。
+    /// `values`に新しい要素が挿入された場合は`true`を返します。
+    pub fn insert(&mut self, value: VecX<T, N>) -> bool {
+        let (index, is_new) = self.values.insert_full(value);
+        self.indices.push(index);
+
+        is_new
+    }
 }
+
 
 impl<T: PartialEq + Eq + Hash + Copy, const N: usize> IndexedVecXs<T, N> {
     /// Convert `IndexedVecXs` to `Vec<VecX<T, N>`.
@@ -158,7 +173,6 @@ impl<T: PartialEq + Eq + Hash + Copy, const N: usize> IndexedVecXs<T, N> {
         self.indices.into_iter().map(|i| *self.values.get_index(i).unwrap()).collect::<Vec<_>>()
     }
 }
-
 
 impl<T: PartialEq + Eq + Hash, const N: usize> Index<usize> for IndexedVecXs<T, N> {
     type Output = VecX<T, N>;
