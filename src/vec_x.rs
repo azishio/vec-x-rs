@@ -94,6 +94,12 @@ pub struct VecX<T, const N: usize> {
     pub data: [T; N],
 }
 
+impl<T: Default + Copy, const N: usize> Default for VecX<T, N> {
+    fn default() -> Self {
+        Self { data: [T::default(); N] }
+    }
+}
+
 impl<T, const N: usize> VecX<T, N> {
     /// Generate a new `VecX`.
     ///
