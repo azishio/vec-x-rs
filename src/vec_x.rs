@@ -135,6 +135,47 @@ impl<T, const N: usize> VecX<T, N> {
     {
         Self { data: [value; N] }
     }
+
+
+    /// Convert `VecX<T, N>` to `VecX<U, N>`.
+    ///
+    /// `VecX<T, N>`を`VecX<U, N>`に変換する。
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use vec_x::{VecX};
+    ///
+    /// let vec:VecX<u8,3> = VecX::new([1, 2, 3]);
+    /// let vec_f64:VecX<f64,3> = vec.into();
+    /// ```
+    pub fn into<U>(self) -> VecX<U, N>
+        where
+            T: Into<U>
+    {
+        let data: [U; N] = self.data.map(|v| v.into());
+        VecX { data }
+    }
+
+    /// Convert `VecX<T, N>` from `VecX<U, N>`.
+    ///
+    /// `VecX<U, N>`から`VecX<T, N>`に変換する。
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use vec_x::{VecX};
+    ///
+    /// let vec = VecX::new([1, 2, 3]);
+    /// let vec_i32:VecX<i32,3> = VecX::from(vec);
+    /// ```
+    pub fn from<U>(vec: VecX<U, N>) -> Self
+        where
+            T: From<U>
+    {
+        let data: [T; N] = vec.data.map(|v| T::from(v));
+        Self { data }
+    }
 }
 
 
