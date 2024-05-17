@@ -291,6 +291,32 @@ impl<T, const N: usize> VecX<T, N> {
         let data: [U; N] = self.data.map(|v| v.as_());
         VecX { data }
     }
+
+    /// Match the number of elements in `VecX<T, N>` to M.
+    /// If `M > T`, empty elements are filled with the value of `T::default()`.
+    ///
+    /// `VecX<T, N>`の要素数をMに合わせる。
+    /// `M > T`である場合、空の要素は`T::default()`の値で満たされる。
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use vec_x::{VecX};
+    ///
+    /// let vec = VecX::new([1, 2, 3]);
+    /// assert_eq!(vec.fit::<2>(), VecX::new([1, 2]));
+    ///
+    /// let vec = VecX::new([1, 2, 3]);
+    /// assert_eq!(vec.fit::<5>(), VecX::new([1, 2, 3, 0, 0]));
+    /// ```
+    pub fn fit<const M: usize>(&self) -> VecX<T, M>
+        where T: Default + Copy {
+        let mut data = [T::default(); M];
+
+        (0..N.min(M)).for_each(|i| data[i] = self.data[i]);
+
+        VecX { data }
+    }
 }
 
 
