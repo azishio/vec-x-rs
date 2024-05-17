@@ -47,6 +47,12 @@ fn main() {
 
     assert_eq!(a + b, VecX::new([5, 7, 9]));
 
+    // スカラーとの演算(+, -, *, /, %)
+    // Operations with scalars (+, -, *, /, %)
+    let a = VecX::new([1, 2, 3]);
+
+    assert_eq!(a + 1, VecX::new([2, 3, 4]));
+
 
     // 代入演算(+, -, *, /, %)
     // Assignment operations (+, -, *, /, %)
@@ -55,6 +61,15 @@ fn main() {
     a += VecX::new([4, 5, 6]);
 
     assert_eq!(a, VecX::new([5, 7, 9]));
+
+    // スカラーとの代入演算(+, -, *, /, %)
+    // Assignment operations with scalars (+, -, *, /, %)
+    let mut a = VecX::new([1, 2, 3]);
+
+    a += 1;
+
+    assert_eq!(a, VecX::new([2, 3, 4]));
+
 
     // インデックスでの管理
     // Management by index
@@ -78,6 +93,7 @@ fn main() {
     let indexed_colors = IndexedVecXs::from_vec(colors);
 
     let IndexedVecXs { values, indices } = indexed_colors;
+ 
 
     // 元データの一意な要素の出現順にインデックスされる
     // Indexed in the order of appearance of unique elements in the original data

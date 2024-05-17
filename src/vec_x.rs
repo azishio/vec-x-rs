@@ -8,8 +8,6 @@ use num::Num;
 /// 任意の要素、任意の長さの固定長配列を表す構造体です。
 /// 主に数学的なベクトルや色を表すために作成したため、四則演算をサポートしています。
 ///
-///
-///
 /// ```
 /// use vec_x::{VecX};
 ///
@@ -48,6 +46,57 @@ use num::Num;
 /// vec %= VecX::new([4, 5, 6]);
 /// assert_eq!(vec, VecX::new([1, 2, 3]));
 /// ```
+/// 
+///　You can also perform arithmetic operations with numeric values.
+/// 
+/// 数値型の値との演算も可能です。
+/// 
+/// ```
+/// use vec_x::{VecX};
+/// 
+/// let vec = VecX::new([1, 2, 3]);
+/// 
+/// // Add
+/// assert_eq!(vec + 1, VecX::new([2, 3, 4]));
+/// 
+/// // Sub
+/// assert_eq!(vec - 1, VecX::new([0, 1, 2]));
+/// 
+/// // Mul
+/// assert_eq!(vec * 2, VecX::new([2, 4, 6]));
+/// 
+/// // Div
+/// assert_eq!(vec / 2, VecX::new([0, 1, 1]));
+/// 
+/// // Rem
+/// assert_eq!(vec % 2, VecX::new([1, 0, 1]));
+/// 
+/// // AddAssign
+/// let mut vec = VecX::new([1, 2, 3]);
+/// vec += 1;
+/// assert_eq!(vec, VecX::new([2, 3, 4]));
+/// 
+/// // SubAssign
+/// let mut vec = VecX::new([1, 2, 3]);
+/// vec -= 1;
+/// assert_eq!(vec, VecX::new([0, 1, 2]));
+/// 
+/// // MulAssign
+/// let mut vec = VecX::new([1, 2, 3]);
+/// vec *= 2;
+/// assert_eq!(vec, VecX::new([2, 4, 6]));
+/// 
+/// // DivAssign
+/// let mut vec = VecX::new([1, 2, 3]);
+/// vec /= 2;
+/// assert_eq!(vec, VecX::new([0, 1, 1]));
+/// 
+/// // RemAssign
+/// let mut vec = VecX::new([1, 2, 3]);
+/// vec %= 2;
+/// assert_eq!(vec, VecX::new([1, 0, 1]));
+/// ```
+/// 
 ///
 /// Non-numeric elements can also be array elements.
 ///
