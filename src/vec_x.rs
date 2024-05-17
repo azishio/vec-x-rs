@@ -1,6 +1,7 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign};
 
 use num::Num;
+use num::traits::AsPrimitive;
 
 /// A structure representing a fixed-length array of arbitrary elements and arbitrary length.
 /// Since it was created primarily to represent mathematical vectors and colors, it supports four arithmetic operations.
@@ -46,57 +47,57 @@ use num::Num;
 /// vec %= VecX::new([4, 5, 6]);
 /// assert_eq!(vec, VecX::new([1, 2, 3]));
 /// ```
-/// 
+///
 ///　You can also perform arithmetic operations with numeric values.
-/// 
+///
 /// 数値型の値との演算も可能です。
-/// 
+///
 /// ```
 /// use vec_x::{VecX};
-/// 
+///
 /// let vec = VecX::new([1, 2, 3]);
-/// 
+///
 /// // Add
 /// assert_eq!(vec + 1, VecX::new([2, 3, 4]));
-/// 
+///
 /// // Sub
 /// assert_eq!(vec - 1, VecX::new([0, 1, 2]));
-/// 
+///
 /// // Mul
 /// assert_eq!(vec * 2, VecX::new([2, 4, 6]));
-/// 
+///
 /// // Div
 /// assert_eq!(vec / 2, VecX::new([0, 1, 1]));
-/// 
+///
 /// // Rem
 /// assert_eq!(vec % 2, VecX::new([1, 0, 1]));
-/// 
+///
 /// // AddAssign
 /// let mut vec = VecX::new([1, 2, 3]);
 /// vec += 1;
 /// assert_eq!(vec, VecX::new([2, 3, 4]));
-/// 
+///
 /// // SubAssign
 /// let mut vec = VecX::new([1, 2, 3]);
 /// vec -= 1;
 /// assert_eq!(vec, VecX::new([0, 1, 2]));
-/// 
+///
 /// // MulAssign
 /// let mut vec = VecX::new([1, 2, 3]);
 /// vec *= 2;
 /// assert_eq!(vec, VecX::new([2, 4, 6]));
-/// 
+///
 /// // DivAssign
 /// let mut vec = VecX::new([1, 2, 3]);
 /// vec /= 2;
 /// assert_eq!(vec, VecX::new([0, 1, 1]));
-/// 
+///
 /// // RemAssign
 /// let mut vec = VecX::new([1, 2, 3]);
 /// vec %= 2;
 /// assert_eq!(vec, VecX::new([1, 0, 1]));
 /// ```
-/// 
+///
 ///
 /// Non-numeric elements can also be array elements.
 ///
@@ -224,6 +225,30 @@ impl<T, const N: usize> VecX<T, N> {
     {
         let data: [T; N] = vec.data.map(|v| T::from(v));
         Self { data }
+    }
+
+    /// Cast `VecX<T, N>` to `VecX<U, N>`.
+    /// Array elements are cast in the same way as numeric types.
+    ///
+    /// `VecX<T, N>`を`VecX<U, N>`にキャストする。
+    /// 配列の要素は数値型と同じ方法でキャストされる。
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use vec_x::{VecX};
+    ///
+    /// let vec = VecX::new([1, 2, 3]);
+    ///
+    /// let vec_f64:VecX<f64,3> = vec.as_();
+    /// ```
+    pub fn as_<U>(&self) -> VecX<U, N>
+        where
+            U: AsPrimitive<T>,
+            T: AsPrimitive<U>
+    {
+        let data: [U; N] = self.data.map(|v| v.as_());
+        VecX { data }
     }
 }
 
