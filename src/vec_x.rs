@@ -99,46 +99,46 @@ use num::traits::AsPrimitive;
 /// ```
 ///
 /// In operations, arrays that implement From/Into traits are implicitly converted to the left-hand side type.
-/// 
+///
 /// 演算において、From/Intoトレイトが実装されている配列同士は暗黙的に左辺の型に変換されます。
-/// 
+///
 /// ```
 /// use vec_x::{VecX};
 /// use std::ops::Add;
-/// 
+///
 /// let vec1:VecX<f32,3> = VecX::new([1., 2., 3.]);
 /// let vec2:VecX<u8,3> = VecX::new([4, 5, 6]);
-/// 
+///
 /// let vec3 = vec1 + vec2;
 /// ```
 /// Arrays that do not implement From/Into trait will fail to compile together.
 /// Thus, there is no loss of precision due to implicit type restitution.
-/// 
+///
 /// From/Intoトレイトが実装されていない配列同士はコンパイルエラーになります。
 /// よって、暗黙的な型返還によって精度が失われることはありません。
-/// 
+///
 /// ```compile_fail
 /// use vec_x::{VecX};
 /// use std::ops::Add;
-/// 
+///
 /// let vec1:VecX<f32,3> = VecX::new([1., 2., 3.]);
 /// let vec2:VecX<u8,3> = VecX::new([4, 5, 6]);
-/// 
+///
 /// let vec3 = vec2 + vec1; // compile error! Cannot add `VecX<f32, 3>` to `VecX<u8, 3>`[E0369]
 /// ```
-/// 
+///
 /// Element casts are also supported.
-/// 
+///
 /// 要素のキャストにも対応しています。
-/// 
+///
 /// ```
 /// use vec_x::{VecX};
-/// 
+///
 /// let vec = VecX::new([1, 2, 3]);
-/// 
+///
 /// let vec_f64:VecX<f64,3> = vec.as_();
 /// ```
-/// 
+///
 ///
 /// Non-numeric elements can also be array elements.
 ///
