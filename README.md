@@ -71,6 +71,12 @@ fn main() {
     assert_eq!(a, VecX::new([2, 3, 4]));
 
 
+    // 要素のキャスト
+    // Element casting
+    let vec = VecX::new([1, 2, 3]);
+    let vec_f64: VecX<f64, 3> = vec.as_();
+
+
     // インデックスでの管理
     // Management by index
     type RGB = VecX<u8, 3>;
@@ -93,7 +99,7 @@ fn main() {
     let indexed_colors = IndexedVecXs::from_vec(colors);
 
     let IndexedVecXs { values, indices } = indexed_colors;
- 
+
 
     // 元データの一意な要素の出現順にインデックスされる
     // Indexed in the order of appearance of unique elements in the original data
