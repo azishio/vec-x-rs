@@ -115,6 +115,26 @@ impl<T, const N: usize> VecX<T, N> {
     pub fn new(data: [T; N]) -> Self {
         Self { data }
     }
+
+    /// Generate a `VecX` initialized with a single value.
+    ///
+    /// 単一の値で初期化された `VecX` を生成する。
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use vec_x::{VecX};
+    ///
+    /// let vec = VecX::new_with(1);
+    ///
+    /// assert_eq!(vec, VecX::new([1, 1, 1]));
+    /// ```
+    pub fn new_with(value: T) -> Self
+        where
+            T: Copy,
+    {
+        Self { data: [value; N] }
+    }
 }
 
 impl<T, const N: usize> Index<usize> for VecX<T, N> {
