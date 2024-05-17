@@ -1,11 +1,13 @@
 # vec-x-rs
 
-任意の固定長の配列を扱うためのライブラリです。
-配列を管理するための構造体`VecX`を提供し、`VecX`同士やスカラー値との数値演算や代入演算をサポートしています。
+固定長の配列を管理するための構造体`VecX`を提供し、`VecX`同士やスカラー値との数値演算や代入演算をサポートします。
 
-A library for handling arbitrary fixed-length arrays.
-It provides a structure `VecX` to manage arrays and supports numeric and assignment operations among `VecX` and with
-scalar values.
+Provides a structure `VecX` to manage fixed-length arrays, supporting numeric operations and assignment operations
+between `VecX` and scalar values.
+
+その他、要素の一括キャストなど、便利なメソッドも提供します。
+
+Other useful methods, such as batch casting of elements, are also provided.
 
 また、一意な配列にインデックスを持たせて管理する方法も提供します。
 
