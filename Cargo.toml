@@ -1,6 +1,6 @@
 [package]
 name = "vec-x"
-version = "0.6.0"
+version = "0.7.0"
 authors = ["azishio"]
 edition = "2021"
 description = "Provides a structure `VecX` to manage fixed-length arrays, supporting numeric operations and assignment operations between `VecX` and scalar values."
