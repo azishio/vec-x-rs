@@ -86,7 +86,9 @@ use crate::VecX;
 ///
 /// let indexed_colors = IndexedVecXs::from_vec(points); // compile error
 /// ```
-pub struct IndexedVecXs<T: PartialEq + Eq + Hash, const N: usize> {
+pub struct IndexedVecXs<T, const N: usize>
+    where T: PartialEq + Eq + Hash + Sized + Send
+{
     /// unique set of `VecX
     ///
     /// 一意な`VecX`の集合
@@ -97,7 +99,9 @@ pub struct IndexedVecXs<T: PartialEq + Eq + Hash, const N: usize> {
     pub indices: Vec<usize>,
 }
 
-impl<T: PartialEq + Eq + Hash, const N: usize> IndexedVecXs<T, N> {
+impl<T, const N: usize> IndexedVecXs<T, N>
+    where T: PartialEq + Eq + Hash + Sized + Send
+{
     /// This is not normally used. Use `from_vec` to generate `IndexedVecXs` from `Vec<VecX<T, N>>`.
     ///
     /// これは通常使用されません。`Vec<VecX<T, N>>`から`IndexedVecXs`を生成するためには`from_vec`を使用してください。
@@ -165,7 +169,9 @@ impl<T: PartialEq + Eq + Hash, const N: usize> IndexedVecXs<T, N> {
 }
 
 
-impl<T: PartialEq + Eq + Hash + Copy, const N: usize> IndexedVecXs<T, N> {
+impl<T, const N: usize> IndexedVecXs<T, N>
+    where T: PartialEq + Eq + Hash + Copy + Sized + Send
+{
     /// Convert `IndexedVecXs` to `Vec<VecX<T, N>`.
     ///
     /// `IndexedVecXs`を`Vec<VecX<T, N>>`に変換します。
@@ -174,7 +180,9 @@ impl<T: PartialEq + Eq + Hash + Copy, const N: usize> IndexedVecXs<T, N> {
     }
 }
 
-impl<T: PartialEq + Eq + Hash, const N: usize> Index<usize> for IndexedVecXs<T, N> {
+impl<T: PartialEq + Eq + Hash, const N: usize> Index<usize> for IndexedVecXs<T, N>
+    where T: PartialEq + Eq + Hash + Sized + Send
+{
     type Output = VecX<T, N>;
 
     fn index(&self, index: usize) -> &Self::Output {
@@ -188,12 +196,16 @@ impl<T: PartialEq + Eq + Hash, const N: usize> Index<usize> for IndexedVecXs<T, 
 ///
 /// `IndexedVecXs`のイテレータです。
 /// `IndexedVecXs`の要素を順番に返します。
-pub struct IndexedVecXIter<'a, T: PartialEq + Eq + Hash, const N: usize> {
+pub struct IndexedVecXIter<'a, T, const N: usize>
+    where T: PartialEq + Eq + Hash + Sized + Send
+{
     collection: &'a IndexedVecXs<T, N>,
     current_index: usize,
 }
 
-impl<'a, T: PartialEq + Eq + Hash, const N: usize> Iterator for IndexedVecXIter<'a, T, N> {
+impl<'a, T, const N: usize> Iterator for IndexedVecXIter<'a, T, N>
+    where T: PartialEq + Eq + Hash + Sized + Send
+{
     type Item = &'a VecX<T, N>;
 
     fn next(&mut self) -> Option<Self::Item> {
