@@ -317,6 +317,57 @@ impl<T, const N: usize> VecX<T, N> {
 
         VecX { data }
     }
+
+    /// Apply a function to each element of `VecX<T, N>`.
+    ///
+    /// `VecX<T, N>`の各要素に関数を適用する。
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use vec_x::{VecX};
+    ///
+    /// let do_something = |v:u32| v.to_string();
+    ///
+    /// let vec = VecX::new([1, 2, 3]);
+    ///
+    /// assert_eq!(vec.batch(do_something), VecX::new(["1".to_string(), "2".to_string(), "3".to_string()]));
+    /// ```
+    pub fn batch<U, F>(self, callback: F) -> VecX<U, N>
+        where F: Fn(T) -> U
+    {
+        let data = self.data.map(callback);
+        VecX { data }
+    }
+
+    /// Apply a function to each element of `VecX<T, N>` and `VecX<U, N>`.
+    ///
+    /// `VecX<T, N>`と`VecX<U, N>`の各要素に関数を適用する。
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use vec_x::{VecX};
+    ///
+    /// let vec1 = VecX::new([1, 5, 3]);
+    /// let vec2 = VecX::new([4, 2, 6]);
+    ///
+    /// assert_eq!(vec1.batch_with(vec2, |a, b| a.min(b)), VecX::new([1, 2, 3])); 
+    /// ```
+
+    pub fn batch_with<U, V, F>(self, other: VecX<U, N>, callback: F) -> VecX<V, N>
+        where V: Default + Copy,
+              T: Copy,
+              U: Copy,
+              F: Fn(T, U) -> V
+
+    {
+        let mut data = [V::default(); N];
+
+        (0..N).for_each(|i| data[i] = callback(self.data[i], other.data[i]));
+
+        VecX { data }
+    }
 }
 
 
