@@ -112,10 +112,10 @@ use num::traits::AsPrimitive;
 /// let vec3 = vec1 + vec2;
 /// ```
 /// Arrays that do not implement From/Into trait will fail to compile together.
-/// Thus, there is no loss of precision due to implicit type restitution.
+/// Thus, there is no loss of precision due to implicit type conversion.
 ///
 /// From/Intoトレイトが実装されていない配列同士はコンパイルエラーになります。
-/// よって、暗黙的な型返還によって精度が失われることはありません。
+/// よって、暗黙的な型変換によって精度が失われることはありません。
 ///
 /// ```compile_fail
 /// use vec_x::{VecX};
