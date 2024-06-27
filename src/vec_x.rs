@@ -617,3 +617,64 @@ impl<T, U, const N: usize> RemAssign<U> for VecX<T, N>
         (0..N).for_each(|i| self.data[i] %= rhs.into());
     }
 }
+
+/// Compare all elements.
+///
+/// 全ての要素を比較する。
+///
+/// # Examples
+///
+/// ```
+/// use vec_x::{VecX};
+///
+/// let vec1 = VecX::new([1, 2, 3]);
+/// let vec2 = VecX::new([1, 2, 3]);
+/// assert_eq!(vec1, vec2);
+/// assert!(vec1 <= vec2);
+/// assert!(vec1 >= vec2);
+///
+/// let vec1 = VecX::new([1, 2, 3]);
+/// let vec2 = VecX::new([4, 5, 6]);
+/// assert!(vec1 < vec2);
+///
+/// let vec1 = VecX::new([1, 2, 3]);
+/// let vec2 = VecX::new([1, 2, 2]);
+/// assert_ne!(vec1, vec2);
+/// assert!(vec1 > vec2);
+/// ```
+///
+/// ```should_panic
+/// use vec_x::{VecX};
+///
+/// let vec1 = VecX::new([1, 2, 3]);
+/// let vec2 = VecX::new([4, 5, 6]);
+///
+/// assert!(vec1 > vec2); // panic!
+/// ```
+///
+/// ```should_panic
+/// use vec_x::{VecX};
+///
+/// let vec1 = VecX::new([1, 2, 1]);
+/// let vec2 = VecX::new([2, 1, 2]);
+///
+/// assert!(vec1 < vec2|| vec1 == vec2 || vec1 > vec2); // panic!
+/// ```
+impl<T, const N: usize> PartialOrd for VecX<T, N>
+where
+    T: Num + PartialOrd + Copy + Sized + Send,
+{
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        if self == other {
+            Some(Ordering::Equal)
+        } else {
+            if self.data.iter().zip(other.data).all(|(a, b)| { *a >= b }) {
+                return Some(Ordering::Greater);
+            }
+            if self.data.iter().zip(other.data).all(|(a, b)| { *a <= b }) {
+                return Some(Ordering::Less);
+            }
+            None
+        }
+    }
+}
