@@ -23,6 +23,9 @@ fn main() {
     // i32型の要素を3つ持つ配列を作成
     // Create an array with three elements of type i32
     let vec: VecX<i32, 3> = VecX::new([1, 2, 3]);
+    let vec: VecX<i32, 3> = VecX::from([1, 2, 3]);
+    let vec: VecX<i32, 3> = VecX::from([1; 3]);
+    let vec: VecX<i32, 3> = VecX::from(1);
 
 
     // 型エイリアスを使用してインスタンスを作成
@@ -73,6 +76,22 @@ fn main() {
 
     assert_eq!(a, VecX::new([2, 3, 4]));
 
+    // 比較
+    // Comparison
+    let vec1 = VecX::new([1, 2, 3]);
+    let vec2 = VecX::new([1, 2, 3]);
+    assert_eq!(vec1, vec2);
+    assert!(vec1 <= vec2);
+    assert!(vec1 >= vec2);
+
+    let vec1 = VecX::new([1, 2, 3]);
+    let vec2 = VecX::new([4, 5, 6]);
+    assert!(vec1 < vec2);
+
+    let vec1 = VecX::new([1, 2, 3]);
+    let vec2 = VecX::new([1, 2, 2]);
+    assert_ne!(vec1, vec2);
+    assert!(vec1 > vec2);
 
     // 要素のキャスト
     // Element casting
