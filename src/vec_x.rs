@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign};
 
 use num::Num;
@@ -182,13 +183,15 @@ use num::traits::AsPrimitive;
 /// ```
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct VecX<T, const N: usize>
-    where T: Sized + Send
+where
+    T: Sized + Send,
 {
     pub data: [T; N],
 }
 
 impl<T, const N: usize> Default for VecX<T, N>
-    where T: Default + Copy + Sized + Send
+where
+    T: Default + Copy + Sized + Send,
 {
     fn default() -> Self {
         Self { data: [T::default(); N] }
@@ -196,7 +199,8 @@ impl<T, const N: usize> Default for VecX<T, N>
 }
 
 impl<T, const N: usize> VecX<T, N>
-    where T: Default + Copy + Sized + Send
+where
+    T: Default + Copy + Sized + Send,
 {
     /// Generate a new `VecX`.
     ///
@@ -234,8 +238,8 @@ impl<T, const N: usize> VecX<T, N>
     /// ```
     #[deprecated]
     pub fn new_with(value: T) -> Self
-        where
-            T: Copy,
+    where
+        T: Copy,
     {
         Self { data: [value; N] }
     }
@@ -254,9 +258,9 @@ impl<T, const N: usize> VecX<T, N>
     /// let vec_f64:VecX<f64,3> = vec.into();
     /// ```
     pub fn into<U>(self) -> VecX<U, N>
-        where
-            T: Into<U>,
-            U: Sized + Send
+    where
+        T: Into<U>,
+        U: Sized + Send,
     {
         let data: [U; N] = self.data.map(|v| v.into());
         VecX { data }
@@ -279,9 +283,9 @@ impl<T, const N: usize> VecX<T, N>
     /// let vec_f64:VecX<f64,3> = vec.as_();
     /// ```
     pub fn as_<U>(&self) -> VecX<U, N>
-        where
-            U: AsPrimitive<T> + Sized + Send,
-            T: AsPrimitive<U>
+    where
+        U: AsPrimitive<T> + Sized + Send,
+        T: AsPrimitive<U>,
     {
         let data: [U; N] = self.data.map(|v| v.as_());
         VecX { data }
@@ -305,7 +309,9 @@ impl<T, const N: usize> VecX<T, N>
     /// assert_eq!(vec.fit::<5>(), VecX::new([1, 2, 3, 0, 0]));
     /// ```
     pub fn fit<const M: usize>(&self) -> VecX<T, M>
-        where T: Default + Copy {
+    where
+        T: Default + Copy,
+    {
         let mut data = [T::default(); M];
 
         (0..N.min(M)).for_each(|i| data[i] = self.data[i]);
@@ -329,8 +335,9 @@ impl<T, const N: usize> VecX<T, N>
     /// assert_eq!(vec.batch(do_something), VecX::new([0, 1, 2]));
     /// ```
     pub fn batch<U, F>(self, callback: F) -> VecX<U, N>
-        where U: Sized + Send,
-              F: Fn(T) -> U
+    where
+        U: Sized + Send,
+        F: Fn(T) -> U,
     {
         let data = self.data.map(callback);
         VecX { data }
@@ -352,11 +359,11 @@ impl<T, const N: usize> VecX<T, N>
     /// ```
 
     pub fn batch_with<U, V, F>(self, other: VecX<U, N>, callback: F) -> VecX<V, N>
-        where
-            T: Copy,
-            U: Copy + Sized + Send,
-            V: Default + Copy + Sized + Send,
-            F: Fn(T, U) -> V
+    where
+        T: Copy,
+        U: Copy + Sized + Send,
+        V: Default + Copy + Sized + Send,
+        F: Fn(T, U) -> V,
 
     {
         let mut data = [V::default(); N];
@@ -408,7 +415,8 @@ where
 }
 
 impl<T, const N: usize> Index<usize> for VecX<T, N>
-    where T: Sized + Send
+where
+    T: Sized + Send,
 {
     type Output = T;
     fn index(&self, index: usize) -> &Self::Output {
@@ -417,7 +425,8 @@ impl<T, const N: usize> Index<usize> for VecX<T, N>
 }
 
 impl<T, const N: usize> IndexMut<usize> for VecX<T, N>
-    where T: Sized + Send
+where
+    T: Sized + Send,
 {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         &mut self.data[index]
@@ -425,8 +434,9 @@ impl<T, const N: usize> IndexMut<usize> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> Add<VecX<U, N>> for VecX<T, N>
-    where T: Num + Copy + Sized + Send,
-          U: Num + Copy + Into<T> + Sized + Send
+where
+    T: Num + Copy + Sized + Send,
+    U: Num + Copy + Into<T> + Sized + Send,
 {
     type Output = Self;
 
@@ -438,8 +448,9 @@ impl<T, U, const N: usize> Add<VecX<U, N>> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> Add<U> for VecX<T, N>
-    where T: Num + Copy + Sized + Send,
-          U: Num + Copy + Into<T> + Sized + Send
+where
+    T: Num + Copy + Sized + Send,
+    U: Num + Copy + Into<T> + Sized + Send,
 {
     type Output = Self;
 
@@ -451,8 +462,9 @@ impl<T, U, const N: usize> Add<U> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> Sub<VecX<U, N>> for VecX<T, N>
-    where T: Num + Copy + Sized + Send,
-          U: Num + Copy + Into<T> + Sized + Send
+where
+    T: Num + Copy + Sized + Send,
+    U: Num + Copy + Into<T> + Sized + Send,
 {
     type Output = Self;
 
@@ -464,8 +476,9 @@ impl<T, U, const N: usize> Sub<VecX<U, N>> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> Sub<U> for VecX<T, N>
-    where T: Num + Copy + Sized + Send,
-          U: Num + Copy + Into<T> + Sized + Send
+where
+    T: Num + Copy + Sized + Send,
+    U: Num + Copy + Into<T> + Sized + Send,
 {
     type Output = Self;
 
@@ -477,8 +490,9 @@ impl<T, U, const N: usize> Sub<U> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> Mul<VecX<U, N>> for VecX<T, N>
-    where T: Num + Copy + Sized + Send,
-          U: Num + Copy + Into<T> + Sized + Send
+where
+    T: Num + Copy + Sized + Send,
+    U: Num + Copy + Into<T> + Sized + Send,
 {
     type Output = Self;
 
@@ -490,8 +504,9 @@ impl<T, U, const N: usize> Mul<VecX<U, N>> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> Mul<U> for VecX<T, N>
-    where T: Num + Copy + Sized + Send,
-          U: Num + Copy + Into<T> + Sized + Send
+where
+    T: Num + Copy + Sized + Send,
+    U: Num + Copy + Into<T> + Sized + Send,
 {
     type Output = Self;
 
@@ -503,8 +518,9 @@ impl<T, U, const N: usize> Mul<U> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> Div<VecX<U, N>> for VecX<T, N>
-    where T: Num + Copy + Sized + Send,
-          U: Num + Copy + Into<T> + Sized + Send
+where
+    T: Num + Copy + Sized + Send,
+    U: Num + Copy + Into<T> + Sized + Send,
 {
     type Output = Self;
 
@@ -516,8 +532,9 @@ impl<T, U, const N: usize> Div<VecX<U, N>> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> Div<U> for VecX<T, N>
-    where T: Num + Copy + Sized + Send,
-          U: Num + Copy + Into<T> + Sized + Send
+where
+    T: Num + Copy + Sized + Send,
+    U: Num + Copy + Into<T> + Sized + Send,
 {
     type Output = Self;
 
@@ -529,8 +546,9 @@ impl<T, U, const N: usize> Div<U> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> Rem<VecX<U, N>> for VecX<T, N>
-    where T: Num + Copy + Sized + Send,
-          U: Num + Copy + Into<T> + Sized + Send
+where
+    T: Num + Copy + Sized + Send,
+    U: Num + Copy + Into<T> + Sized + Send,
 {
     type Output = Self;
 
@@ -542,8 +560,9 @@ impl<T, U, const N: usize> Rem<VecX<U, N>> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> Rem<U> for VecX<T, N>
-    where T: Num + Copy + Sized + Send,
-          U: Num + Copy + Into<T> + Sized + Send
+where
+    T: Num + Copy + Sized + Send,
+    U: Num + Copy + Into<T> + Sized + Send,
 {
     type Output = Self;
 
@@ -555,8 +574,9 @@ impl<T, U, const N: usize> Rem<U> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> AddAssign<VecX<U, N>> for VecX<T, N>
-    where T: Num + AddAssign + Copy + Sized + Send,
-          U: Num + AddAssign + Copy + Into<T> + Sized + Send
+where
+    T: Num + AddAssign + Copy + Sized + Send,
+    U: Num + AddAssign + Copy + Into<T> + Sized + Send,
 {
     fn add_assign(&mut self, rhs: VecX<U, N>) {
         (0..N).for_each(|i| self.data[i] += rhs.data[i].into());
@@ -564,8 +584,9 @@ impl<T, U, const N: usize> AddAssign<VecX<U, N>> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> AddAssign<U> for VecX<T, N>
-    where T: Num + AddAssign + Copy + Sized + Send,
-          U: Num + AddAssign + Copy + Into<T> + Sized + Send
+where
+    T: Num + AddAssign + Copy + Sized + Send,
+    U: Num + AddAssign + Copy + Into<T> + Sized + Send,
 {
     fn add_assign(&mut self, rhs: U) {
         (0..N).for_each(|i| self.data[i] += rhs.into());
@@ -573,8 +594,9 @@ impl<T, U, const N: usize> AddAssign<U> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> SubAssign<VecX<U, N>> for VecX<T, N>
-    where T: Num + SubAssign + Copy + Sized + Send,
-          U: Num + SubAssign + Copy + Into<T> + Sized + Send
+where
+    T: Num + SubAssign + Copy + Sized + Send,
+    U: Num + SubAssign + Copy + Into<T> + Sized + Send,
 {
     fn sub_assign(&mut self, rhs: VecX<U, N>) {
         (0..N).for_each(|i| self.data[i] -= rhs.data[i].into());
@@ -582,8 +604,9 @@ impl<T, U, const N: usize> SubAssign<VecX<U, N>> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> SubAssign<U> for VecX<T, N>
-    where T: Num + SubAssign + Copy + Sized + Send,
-          U: Num + SubAssign + Copy + Into<T> + Sized + Send
+where
+    T: Num + SubAssign + Copy + Sized + Send,
+    U: Num + SubAssign + Copy + Into<T> + Sized + Send,
 {
     fn sub_assign(&mut self, rhs: U) {
         (0..N).for_each(|i| self.data[i] -= rhs.into());
@@ -591,8 +614,9 @@ impl<T, U, const N: usize> SubAssign<U> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> MulAssign<VecX<U, N>> for VecX<T, N>
-    where T: Num + MulAssign + Copy + Sized + Send,
-          U: Num + MulAssign + Copy + Into<T> + Sized + Send
+where
+    T: Num + MulAssign + Copy + Sized + Send,
+    U: Num + MulAssign + Copy + Into<T> + Sized + Send,
 {
     fn mul_assign(&mut self, rhs: VecX<U, N>) {
         (0..N).for_each(|i| self.data[i] *= rhs.data[i].into());
@@ -600,8 +624,9 @@ impl<T, U, const N: usize> MulAssign<VecX<U, N>> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> MulAssign<U> for VecX<T, N>
-    where T: Num + MulAssign + Copy + Sized + Send,
-          U: Num + MulAssign + Copy + Into<T> + Sized + Send
+where
+    T: Num + MulAssign + Copy + Sized + Send,
+    U: Num + MulAssign + Copy + Into<T> + Sized + Send,
 {
     fn mul_assign(&mut self, rhs: U) {
         (0..N).for_each(|i| self.data[i] *= rhs.into());
@@ -609,8 +634,9 @@ impl<T, U, const N: usize> MulAssign<U> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> DivAssign<VecX<U, N>> for VecX<T, N>
-    where T: Num + DivAssign + Copy + Sized + Send,
-          U: Num + DivAssign + Copy + Into<T> + Sized + Send
+where
+    T: Num + DivAssign + Copy + Sized + Send,
+    U: Num + DivAssign + Copy + Into<T> + Sized + Send,
 {
     fn div_assign(&mut self, rhs: VecX<U, N>) {
         (0..N).for_each(|i| self.data[i] /= rhs.data[i].into());
@@ -618,8 +644,9 @@ impl<T, U, const N: usize> DivAssign<VecX<U, N>> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> DivAssign<U> for VecX<T, N>
-    where T: Num + DivAssign + Copy + Sized + Send,
-          U: Num + DivAssign + Copy + Into<T> + Sized + Send
+where
+    T: Num + DivAssign + Copy + Sized + Send,
+    U: Num + DivAssign + Copy + Into<T> + Sized + Send,
 {
     fn div_assign(&mut self, rhs: U) {
         (0..N).for_each(|i| self.data[i] /= rhs.into());
@@ -627,8 +654,9 @@ impl<T, U, const N: usize> DivAssign<U> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> RemAssign<VecX<U, N>> for VecX<T, N>
-    where T: Num + RemAssign + Copy + Sized + Send,
-          U: Num + RemAssign + Copy + Into<T> + Sized + Send
+where
+    T: Num + RemAssign + Copy + Sized + Send,
+    U: Num + RemAssign + Copy + Into<T> + Sized + Send,
 {
     fn rem_assign(&mut self, rhs: VecX<U, N>) {
         (0..N).for_each(|i| self.data[i] %= rhs.data[i].into());
@@ -636,8 +664,9 @@ impl<T, U, const N: usize> RemAssign<VecX<U, N>> for VecX<T, N>
 }
 
 impl<T, U, const N: usize> RemAssign<U> for VecX<T, N>
-    where T: Num + RemAssign + Copy + Sized + Send,
-          U: Num + RemAssign + Copy + Into<T> + Sized + Send
+where
+    T: Num + RemAssign + Copy + Sized + Send,
+    U: Num + RemAssign + Copy + Into<T> + Sized + Send,
 {
     fn rem_assign(&mut self, rhs: U) {
         (0..N).for_each(|i| self.data[i] %= rhs.into());
