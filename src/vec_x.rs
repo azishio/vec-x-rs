@@ -217,6 +217,12 @@ impl<T, const N: usize> VecX<T, N>
     ///
     /// 単一の値で初期化された `VecX` を生成する。
     ///
+    /// # Deprecated
+    ///
+    /// This method is deprecated. Use `VecX::from()` instead.
+    ///
+    /// 互換性のために残されていますが、`VecX::from()`を使用してください。
+    ///
     /// # Examples
     ///
     /// ```
@@ -226,6 +232,7 @@ impl<T, const N: usize> VecX<T, N>
     ///
     /// assert_eq!(vec, VecX::new([1, 1, 1]));
     /// ```
+    #[deprecated]
     pub fn new_with(value: T) -> Self
         where
             T: Copy,
@@ -255,26 +262,6 @@ impl<T, const N: usize> VecX<T, N>
         VecX { data }
     }
 
-    /// Convert `VecX<T, N>` from `VecX<U, N>`.
-    ///
-    /// `VecX<U, N>`から`VecX<T, N>`に変換する。
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use vec_x::{VecX};
-    ///
-    /// let vec = VecX::new([1, 2, 3]);
-    /// let vec_i32:VecX<i32,3> = VecX::from(vec);
-    /// ```
-    pub fn from<U>(vec: VecX<U, N>) -> Self
-        where
-            T: From<U>,
-            U: Sized + Send
-    {
-        let data: [T; N] = vec.data.map(|v| T::from(v));
-        Self { data }
-    }
 
     /// Cast `VecX<T, N>` to `VecX<U, N>`.
     /// Array elements are cast in the same way as numeric types.
@@ -380,6 +367,45 @@ impl<T, const N: usize> VecX<T, N>
     }
 }
 
+/// # Examples
+///
+/// ```
+/// use vec_x::{VecX};
+///
+/// let vec:VecX<u32,3> = VecX::from(1);
+///
+/// assert_eq!(vec, VecX::new([1, 1, 1]));
+///
+/// ```
+impl<T, const N: usize> From<T> for VecX<T, N>
+where
+    T: Sized + Send + Copy,
+{
+    fn from(value: T) -> Self {
+        Self { data: [value; N] }
+    }
+}
+
+/// Convert `VecX<T, N>` from `VecX<U, N>`.
+///
+/// `VecX<U, N>`から`VecX<T, N>`に変換する。
+///
+/// # Examples
+///
+/// ```
+/// use vec_x::{VecX};
+///
+/// let vec = VecX::new([1, 2, 3]);
+/// let vec_i32:VecX<i32,3> = VecX::from(vec);
+/// ```
+impl<T, const N: usize> From<[T; N]> for VecX<T, N>
+where
+    T: Sized + Send + Copy,
+{
+    fn from(data: [T; N]) -> Self {
+        Self { data }
+    }
+}
 
 impl<T, const N: usize> Index<usize> for VecX<T, N>
     where T: Sized + Send
