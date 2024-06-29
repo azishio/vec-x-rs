@@ -9,10 +9,6 @@ between `VecX` and scalar values.
 
 Other useful methods, such as batch casting of elements, are also provided.
 
-また、一意な配列にインデックスを持たせて管理する方法も提供します。
-
-It also provides a way to manage unique arrays with indices.
-
 ## 使い方 (Usage)
 
 ```rust
@@ -97,39 +93,6 @@ fn main() {
     // Element casting
     let vec = VecX::new([1, 2, 3]);
     let vec_f64: VecX<f64, 3> = vec.as_();
-
-
-    // インデックスでの管理
-    // Management by index
-    type RGB = VecX<u8, 3>;
-
-    let unique_colors = vec![
-        RGB::new([255, 0, 0]),
-        RGB::new([0, 255, 0]),
-        RGB::new([0, 0, 255]),
-    ];
-
-    let colors = vec![
-        unique_colors[0], // VecX: [255, 0, 0]
-        unique_colors[1], // VecX: [0, 255, 0]
-        unique_colors[1], // VecX: [0, 255, 0]
-        unique_colors[0], // VecX: [255, 0, 0]
-        unique_colors[2], // VecX: [0, 0, 255]
-        unique_colors[2], // VecX: [0, 0, 255]
-    ];
-
-    let indexed_colors = IndexedVecXs::from_vec(colors);
-
-    let IndexedVecXs { values, indices } = indexed_colors;
-
-
-    // 元データの一意な要素の出現順にインデックスされる
-    // Indexed in the order of appearance of unique elements in the original data
-    assert_eq!(values[0], unique_colors[0]);
-    assert_eq!(values[1], unique_colors[1]);
-    assert_eq!(values[2], unique_colors[2]);
-
-    assert_eq!(indices, vec![0, 1, 1, 0, 2, 2]);
 }
 ```
 
